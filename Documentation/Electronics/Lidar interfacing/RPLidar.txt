@@ -1,0 +1,6 @@
+rplidar INTERFACING
+Install this library:
+https://github.com/SkRobo/rplidar
+
+Start the idle
+Try first?
