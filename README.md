@@ -2,12 +2,8 @@
 UBUNTU INSTALLATION on RPi
 
 * [Installation](#Installtion)
-* [Examples](#examples)
-* [Matching Routes](#matching-routes)
-* [Static Files](#static-files)
-* [Registered URLs](#registered-urls)
-* [Walking Routes](#walking-routes)
-* [Full Example](#full-example)
+* [RPi Configurations](#RPi Configurations)
+* [Remote Access](#Remote Access)
 
 
 ## Installation
@@ -29,6 +25,8 @@ Configure your username and password. <br />
 Connect to WiFi (iLP2 WiFi works) <br />
 Reboot, as the RPi may be laggy in its first boot <br />
 
+## RPi Configurations
+
 * Update and upgrade, and reboot <br />
 sudo apt-get update && sudo apt-get upgrade -y && sudo reboot
 
@@ -45,13 +43,15 @@ sudo date -s "$(wget -qSO- --max-redirect=0 google.com 2>&1 | grep Date: | cut -
 (accept changes, if there is)
 Control-X to exit
 
-ENABLE SSH (To connect and control wirelessly)
-sudo systemctl enable ssh
-
-SETTING UP VNC (Virtual desktop viewing on computer)
-https://www.raspberrypi.org/documentation/remote-access/vnc/
-
-Installation of ROS
+* Installation of ROS <br />
 http://wiki.ros.org/kinetic/Installation/Ubuntu
 Follow the steps on the page, choose desktop-full install
 
+## Remote Access
+
+* Enable SSH <br />
+(To connect and control wirelessly)
+sudo systemctl enable ssh
+
+* SETTING UP VNC (Virtual desktop viewing on computer) <br />
+https://www.raspberrypi.org/documentation/remote-access/vnc/
