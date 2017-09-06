@@ -24,23 +24,22 @@ Minimum size of SD card 8GB. Recommended size of SD card is 32GB, as you will in
 
 * Accessories <br />
 Attach SD card, HDMI output, USB Mouse, USB Keybaord <br />
-Attach power, 5V 2.5A <br />
-It will turn on. <br />
-Configure your password. <br />
+Then, attach power to turn on. (5V 2.5A) <br />
+Configure your username and password. <br />
 Connect to WiFi (iLP2 WiFi works) <br />
 Reboot, as the RPi may be laggy in its first boot <br />
 
-Update and upgrade, and reboot:
+* Update and upgrade, and reboot <br />
 sudo apt-get update && sudo apt-get upgrade -y && sudo reboot
 
-Uninstall unnecessary preloaded programs (to save space)
+* Uninstall unnecessary preloaded programs (to save space) <br />
 sudo apt-get autoremove
 
-Installing Chrome
+* Installing Chrome <br />
 sudo apt-get install chromium-browser
 
-There is no hardware clock on RPi. 
-Script to sync clock with Internet on every boot:
+* Setting up the time <br />
+There is no hardware clock on RPi. Script to sync clock with Internet on every boot: <br />
 sudo nano /etc/ rc.local
 sudo date -s "$(wget -qSO- --max-redirect=0 google.com 2>&1 | grep Date: | cut -d' ' -f5-8)Z"
 (accept changes, if there is)
