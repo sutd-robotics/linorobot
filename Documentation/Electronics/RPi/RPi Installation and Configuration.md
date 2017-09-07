@@ -1,6 +1,6 @@
 # RaspberryPi Installation and Configuration Guide
 
-* [Installation](#Installtion)
+* [Installation](#Installation)
 * [RPi Configurations](#RPi Configurations)
 * [Remote Access](#Remote Access)
 * [MicroSD Image Handling](#MicroSD Image Handling)
