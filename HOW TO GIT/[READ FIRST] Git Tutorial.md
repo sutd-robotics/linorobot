@@ -1,7 +1,7 @@
 # Git Tutorial
 
-# Basic
+## Basic
 http://rogerdudler.github.io/git-guide/
 
-# Syncing
+## Syncing
 https://www.atlassian.com/git/tutorials/syncing
