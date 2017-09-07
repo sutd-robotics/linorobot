@@ -1,5 +1,4 @@
-# linorobot
-UBUNTU INSTALLATION and CONFIGURATION on RPi
+# RaspberryPi Installation and Configuration Guide
 
 * [Installation](#Installtion)
 * [RPi Configurations](#RPi Configurations)

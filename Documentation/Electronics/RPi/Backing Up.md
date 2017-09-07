@@ -1,4 +1,4 @@
-BACKING UP AN SD CARD
+##BACKING UP AN SD CARD
 as per https://computers.tutsplus.com/articles/how-to-clone-your-raspberry-pi-sd-cards-with-windows--mac-59294
 
 It seems that you could only transfer to and from SD cards of the same capacity. The brand name and model of the SD cards does not seem to matter (to be confirmed).
