@@ -4,6 +4,8 @@
 * [RPi Configurations](#RPi Configurations)
 * [Remote Access](#Remote Access)
 * [MicroSD Image Handling](#MicroSD Image Handling)
+* [Testing the XV-11 Lidar](#Testing the XV-11 Lidar)
+* [Using RViz to visualise XV-11 Lidar input](#Using RViz to visualise XV-11 Lidar input)
 
 
 ## Installation
@@ -77,11 +79,16 @@ Install with the .exe file <br />
 (What is VNC Viewer used for, and how to use it?)
 
 ## MicroSD Image Handling
-Reading and writing, and resizing MicroSD image
+Reading and writing, and resizing MicroSD image, as per: <br /> 
+https://computers.tutsplus.com/articles/how-to-clone-your-raspberry-pi-sd-cards-with-windows--mac-59294
 
 * Reading and Writing  <br />
 Win32 Disk Imager  <br /> 
-https://sourceforge.net/projects/win32diskimager/files/Archive/
+https://sourceforge.net/projects/win32diskimager/files/Archive/ <br /> 
+Install with the exe file <br /> 
+Choose location, and write your file name e.g. C:\Users\tong\Documents\UbuntuROS_040917.img <br /> 
+Press "Read" to save image of SD card. Takes some time.
+Replace SD card, press "Write" to write the selected image into the SD card.
 
 * Upsizing <br />
 To expand disk memory to the entire of the SD card, for example after flashing 8GB image into a 32GB drive. <br />
@@ -89,5 +96,69 @@ sudo raspi-config > Advanced > Expand Filesystem <br />
 After rebooting, all the memory of the SD card will be occupied.
 
 * Downsizing <br />
-How? You may need to decrease the size occupied to transfer between SD card of almost similar capacity.
+You could only transfer to and from SD cards with a higher capacity. 
+Not any lower - two different brands of 32GB SD card may not work. <br />
+(to be explored, since we may need to decrease the size occupied to transfer between SD card of almost similar capacity)
 
+## Testing the XV-11 Lidar
+
+* Checking LIDAR port <br />
+Download arduino to check which port is the LIDAR <br />
+https://www.arduino.cc/en/Main/Software > Linux ARM <br />
+Extract folder <br />
+Set permission on the install script: chmod +x *.sh <br />
+Run command line sudo ./install.sh <br />
+Check which port is the LIDAR (example ttyACM0) <br />
+Alternatively, unplug and plug in the lidar, open new terminal, enter dmesg
+
+* Visualising XV-11 Lidar information <br />
+The RPi reads the LIDAR through serial. A python script is used to visualize the information. <br />
+Allow permissions sudo chmod 777 /dev/(portname: e.g.ttyACM0) <br />
+Download and unzip folder: <br />
+https://github.com/simondlevy/xvlidar <br />
+Go to XVLidar folder, open in terminal (downloaded from where) python lidarplot.py
+
+## Using RViz to visualise XV-11 Lidar input
+Modified instructions from: <br />
+http://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment <br />
+http://wiki.ros.org/xv_11_laser_driver/Tutorials/Running%20the%20XV-11%20Node
+ 
+* Create catkin workspace with XV-11lidardriver <br />
+sudo apt-get install git <br />
+source /opt/ros/kinetic/setup.bash <br />
+printenv | grep ROS (should show up some ROS packages including) <br />
+mkdir -p ~/catkin_ws/src <br />
+cd ~/catkin_ws/src/ <br />
+git clone https://github.com/rohbotics/xv_11_laser_driver.git <br />
+cd .. <br />
+catkin_make <br />
+source devel/setup.bash
+
+* Starting roscore
+On another terminal <br />
+cd catkin_ws <br />
+roscore
+
+* Starting publisher
+New terminal: <br />
+cd catkin_ws <br />
+source devel/setup.bash <br />
+rosrun xv_11_laser_driver neato_laser_publisher _port:=/dev/ttyACM0 (or another port name) <br />
+Should see the publisher running
+
+* Starting the RViz
+New terminal: <br />
+cd catkin_ws <br />
+source devel/setup.bash <br />
+rosrun rviz rviz
+
+* Configuring RViz <br />
+Set fixed frame and change frame rate <br />
+Edit "Fixed Frame" value (top-left in rviz window). <br />
+Click where it says, "map" and enter "/neato_laser" (without quotes) <br />
+Click on the right of "Frame Rate" and change to 10 <br />
+Add laser scan <br />
+Click on the "Add" button (bottom-left in rviz window) and select "LaserScan" from the list. <br />
+Add scan topic <br />
+Expand LaserScan (in left pane of rviz window) and click to the right of "Topic" and select "/scan" from the drop-down list. <br />
+You should see a lidar map. Change LaserScan>"size" to bolden the outline.
