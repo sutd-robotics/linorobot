@@ -1,0 +1,8 @@
+prefix=/home/soar/linorobot_ws/install
+
+Name: marvelmind_nav
+Description: Description of marvelmind_nav
+Version: 1.0.6
+Cflags: -I/home/soar/linorobot_ws/install/include
+Libs: -L/home/soar/linorobot_ws/install/lib 
+Requires: message_runtime

@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/soar/linorobot_ws/install/setup.sh

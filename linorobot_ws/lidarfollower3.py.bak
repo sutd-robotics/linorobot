@@ -1,0 +1,97 @@
+#!/usr/bin/env python
+#Import all the required messages
+import rospy
+from geometry_msgs.msg import Twist
+from sensor_msgs.msg import LaserScan
+
+
+## FRONT OF XV-11 LIDAR IS OF INDEX 180 OUT OF 360
+
+# Class object that does everything
+class Follower:
+    #initialise Subscriber and Publisher and Twist
+    def __init__(self):
+        self.scan_sub=rospy.Subscriber('scan', LaserScan, self.scan_callback)
+        self.cmd_vel_pub=rospy.Publisher('cmd_vel', Twist, queue_size=1)
+        self.twist=Twist()
+
+    def scan_callback(self,msg):
+        #Getting data from sensor
+        self.range_data = msg.ranges
+        #self.increment = msg.angle_increment
+
+
+        # boundary from midpoint(assuming midpoint is the front)
+        bound = 60
+        upperbound = len(self.range_data) / 2 + bound
+        lowerbound = len(self.range_data) / 2 - bound
+
+        # slice out the values to form a new list
+        middlerange = self.range_data[lowerbound:upperbound]
+	widerrange = self.range_data[(lowerbound-bound/2):(upperbound+bound/2)]	
+        # get index of the smallest value within the middle range (for distance > 10cm)
+        #indexofmin = middlerange.index(min(middlerange))+lowerbound
+	minVal = min(x for x in middlerange if x>0.06)
+	indexofmin = middlerange.index(minVal)
+        # use the index to get the angle by multiplying increment
+        # angle = indexofmin * self.increment
+        xspeed=0.5
+        #conditions
+        if middlerange[indexofmin] > 0.3 and middlerange[indexofmin] < 1.5:
+            if indexofmin>bound+20 and indexofmin<bound*2: #Upper bound (turns left)
+                self.twist.linear.x = xspeed*(minVal)
+                self.twist.angular.z = 2*xspeed
+            elif indexofmin<bound-20 and indexofmin>0:
+                self.twist.linear.x = xspeed*(minVal)
+                self.twist.angular.z = -2*xspeed
+            else:
+                self.twist.linear.x = xspeed*(minVal)
+                self.twist.angular.z = 0
+	elif middlerange[indexofmin] > 0 and middlerange[indexofmin] <= 0.25:
+	    if indexofmin>bound+10 and indexofmin<bound*2:
+                self.twist.linear.x = -0.33*(0.20-minVal)/0.20
+                self.twist.angular.z = 0.75
+            elif indexofmin<bound-10 and indexofmin>0:
+                self.twist.linear.x = -0.33*(0.20-minVal)/0.20
+                self.twist.angular.z = -0.75
+            else:
+                self.twist.linear.x = -(0.20-minVal)/0.20
+                self.twist.angular.z = 0
+	else:
+	    minVal = min(x for x in widerrange if x>0.06)
+	    indexofmin = widerrange.index(minVal)
+            if indexofmin>(bound*1.5)+20 and indexofmin<bound*2:
+                self.twist.linear.x = 0
+                self.twist.angular.z = 1
+            elif indexofmin<(bound/2)-20 and indexofmin>0:
+                self.twist.linear.x = 0
+                self.twist.angular.z = -1
+            else:
+                self.twist.linear.x = 0
+                self.twist.angular.z = 0
+
+
+        #print("lenofrange: ", len(self.range_data))
+        #print("lowerbound: ", lowerbound)
+        #print("upperbound: ", upperbound)
+	print("min range: ", minVal)
+        #print("range data: ",self.range_data)
+        print("indexofmin:: ",indexofmin)
+        #print("increment: ",self.increment)
+        #print("Linear X: ", self.twist.linear.x)
+        #print("Angular Z: ", self.twist.angular.z)
+        #Publish to cmd_vel
+	self.cmd_vel_pub.publish(self.twist)
+
+#initialise Node
+rospy.init_node('lidarfollower')
+# invoke Class
+follower = Follower()
+rospy.spin()
+
+# Random thoughts
+# check a certain range.
+# flip range
+# maintainfminimum
+# check if lidar is on
+# arduino joystick

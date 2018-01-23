@@ -1,0 +1,2 @@
+imu_calib:lino_msgs:lino_pid:lino_udev:linorobot:marvelmind_nav
+-DCATKIN_DEVEL_PREFIX=/home/soar/linorobot_ws/devel -DCMAKE_INSTALL_PREFIX=/home/soar/linorobot_ws/install -G Unix Makefiles
